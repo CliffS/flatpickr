@@ -2,6 +2,16 @@ import { int, pad } from "../utils";
 import { Locale } from "../types/locale";
 import { ParsedOptions } from "../types/options";
 
+function caseIndexOf(array: Array<string>, ele: string) : number {
+  ele = ele.toLowerCase();
+  for (let i = 0, len = array.length; i < len; i++) {
+    if (ele === array[i].toLowerCase()) {
+      return i;
+    }
+  }
+  return -1;
+}
+
 export type token =
   | "D"
   | "F"
@@ -44,7 +54,7 @@ export type RevFormat = Record<string, RevFormatFn>;
 export const revFormat: RevFormat = {
   D: doNothing,
   F: function(dateObj: Date, monthName: string, locale: Locale) {
-    dateObj.setMonth(locale.months.longhand.indexOf(monthName));
+    dateObj.setMonth(caseIndexOf(locale.months.longhand, monthName));
   },
   G: (dateObj: Date, hour: string) => {
     dateObj.setHours(parseFloat(hour));
@@ -62,7 +72,7 @@ export const revFormat: RevFormat = {
     );
   },
   M: function(dateObj: Date, shortMonth: string, locale: Locale) {
-    dateObj.setMonth(locale.months.shorthand.indexOf(shortMonth));
+    dateObj.setMonth(caseIndexOf(locale.months.shorthand, shortMonth));
   },
   S: (dateObj: Date, seconds: string) => {
     dateObj.setSeconds(parseFloat(seconds));
